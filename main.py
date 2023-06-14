@@ -3,16 +3,18 @@ from enum import IntEnum
 class select_menu(IntEnum):
     VIEW_PHONEBOOK = 1
     SEARCH_BY_NAME = 2
-    SEARCH_BY_NUMBER = 3
-    ADD_NEW_USER = 4
+    SEARCH_BY_SURNAME = 3
+    SEARCH_BY_NUMBER = 4
+    ADD_NEW_USER = 5
 
 def show_menu():
     print('Добро пожаловать в телефонный справочник.')
     print('Для дальнейшей работы, выберете один из пунктов меню:')
     print('\t 1. Отобразить все записи')
     print('\t 2. Найти запись по имени')
-    print('\t 3. Найти запись по номеру телефона')
-    print('\t 4. Добавить новую запись')
+    print('\t 3. Найти запись по фамилии')
+    print('\t 4. Найти запись по номеру телефона')
+    print('\t 5. Добавить новую запись')
     return int(input('Введите пункт меню: '))
 
 def add_user(phone_book, user_data):
@@ -20,23 +22,17 @@ def add_user(phone_book, user_data):
 
 def get_new_user():
     user_data = []
-    user_data.append(input('Введите фамилию: ').strip())
-    user_data.append(input('Введите имя: ').strip())
-    user_data.append(input('Введите номер телефона: ').strip())
-    user_data.append(input('Введите описание: ').strip())
+    user_data.append(get_string_from_console('Введите фамилию: '))
+    user_data.append(get_string_from_console('Введите имя: '))
+    user_data.append(get_string_from_console('Введите номер телефона: '))
+    user_data.append(get_string_from_console('Введите описание: '))
     return user_data
 
-def get_search_name():
-    return input('Введите имя для поиска: ').strip()
+def get_string_from_console(text):
+    return input(text).strip()
 
-def get_search_number():
-    return input('Введите номер телефона для поиска: ').replace(' ', '')
-
-def find_by_name(phone_book, name):
-    return [x for x in phone_book if str.upper(x[1]) == str.upper(name)]
-
-def find_by_number(phone_book, number):
-    return [x for x in phone_book if str(x[2]).replace(' ', '') == number]
+def find_string_in_column(phone_book, find_string, column):
+    return [x for x in phone_book if str.upper(x[column]) == str.upper(find_string)]
 
 def read_csv(filename):
     phonebook_list = []
@@ -78,21 +74,21 @@ def work_with_phonebook():
         if choice == select_menu.VIEW_PHONEBOOK:
             print_result(phone_book)
         elif choice == select_menu.SEARCH_BY_NAME:
-            name = get_search_name()
-            print_result(find_by_name(phone_book, name))
+            name = get_string_from_console('Введите имя для поиска: ')
+            print_result(find_string_in_column(phone_book, name, 1))
+        
+        elif choice == select_menu.SEARCH_BY_SURNAME:
+            surname = get_string_from_console('Введите фамилию для поиска: ')
+            print_result(find_string_in_column(phone_book, surname, 0))
 
         elif choice == select_menu.SEARCH_BY_NUMBER:
-            number = get_search_number()
-            print_result(find_by_number(phone_book, number))
+            number = get_string_from_console('Введите номер телефона для поиска: ')
+            print_result(find_string_in_column(phone_book, number, 2))
 
         elif choice == select_menu.ADD_NEW_USER:
             user_data = get_new_user()
             add_user(phone_book, user_data)
             write_csv('phonebook.csv', user_data)
-
-        # elif choice == 5:
-        #     file_name = get_file_name()
-        #     write_txt(file_name, phone_book)
 
         choice = show_menu()
 
