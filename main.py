@@ -19,8 +19,14 @@ def show_menu():
 def get_search_name():
     return input('Введите имя для поиска: ').strip()
 
+def get_search_number():
+    return input('Введите номер телефона для поиска: ').replace(' ', '')
+
 def find_by_name(phone_book, name):
     return [x for x in phone_book if str.upper(x[1]) == str.upper(name)]
+
+def find_by_number(phone_book, number):
+    return [x for x in phone_book if str(x[2]).replace(' ', '') == number]
 
 def read_csv(filename):
     phonebook_list = []
@@ -54,12 +60,12 @@ def work_with_phonebook():
         if choice == select_menu.VIEW_PHONEBOOK:
             print_result(phone_book)
         elif choice == select_menu.SEARCH_BY_NAME:
-             name = get_search_name()
-             print_result((find_by_name(phone_book, name)))
+            name = get_search_name()
+            print_result(find_by_name(phone_book, name))
 
-        # elif choice == select_menu.SEARCH_BY_NUMBER:
-        #     number = get_search_number()
-        #     print(find_by_number(phone_book, number))
+        elif choice == select_menu.SEARCH_BY_NUMBER:
+            number = get_search_number()
+            print_result(find_by_number(phone_book, number))
 
         # elif choice == select_menu.ADD_NEW_USER:
         #     user_data = get_new_user()
