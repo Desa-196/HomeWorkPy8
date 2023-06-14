@@ -31,7 +31,14 @@ def read_csv(filename):
 
 
 def print_result(phone_book):
-    print_str = ''
+
+    print_str = '\n'
+    print_str += '{:<20s}'.format('Фамилия')
+    print_str += '{:<20s}'.format('Имя')
+    print_str += '{:<20s}'.format('Номер телефона')
+    print_str += '{:<20s}'.format('Описание')
+    print_str += '\n-------------------------------------------------------------------------------------------------\n'
+
     for line in phone_book:
         for row in line:
            print_str += '{:<20s}'.format(row)
