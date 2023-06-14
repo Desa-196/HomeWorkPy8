@@ -13,8 +13,18 @@ def show_menu():
     print('\t 2. Найти запись по имени')
     print('\t 3. Найти запись по номеру телефона')
     print('\t 4. Добавить новую запись')
-    print('\t 5. Сохранить изменения в файл')
     return int(input('Введите пункт меню: '))
+
+def add_user(phone_book, user_data):
+    phone_book.append(user_data)
+
+def get_new_user():
+    user_data = []
+    user_data.append(input('Введите фамилию: ').strip())
+    user_data.append(input('Введите имя: ').strip())
+    user_data.append(input('Введите номер телефона: ').strip())
+    user_data.append(input('Введите описание: ').strip())
+    return user_data
 
 def get_search_name():
     return input('Введите имя для поиска: ').strip()
@@ -35,6 +45,10 @@ def read_csv(filename):
             phonebook_list.append(line.rstrip().split(','))
     return phonebook_list
 
+def write_csv(filename, phone_book):
+    with open(filename, "a", encoding="utf-8") as data: 
+        print(phone_book)
+        data.write(','.join(phone_book) + '\n')
 
 def print_result(phone_book):
 
@@ -71,10 +85,10 @@ def work_with_phonebook():
             number = get_search_number()
             print_result(find_by_number(phone_book, number))
 
-        # elif choice == select_menu.ADD_NEW_USER:
-        #     user_data = get_new_user()
-        #     add_user(phone_book, user_data)
-        #     write_csv('phonebook.csv', phone_book)
+        elif choice == select_menu.ADD_NEW_USER:
+            user_data = get_new_user()
+            add_user(phone_book, user_data)
+            write_csv('phonebook.csv', user_data)
 
         # elif choice == 5:
         #     file_name = get_file_name()
