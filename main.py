@@ -39,16 +39,20 @@ def read_csv(filename):
 def print_result(phone_book):
 
     print_str = '\n'
+    print_str += '{:<10s}'.format('№')
     print_str += '{:<20s}'.format('Фамилия')
     print_str += '{:<20s}'.format('Имя')
     print_str += '{:<20s}'.format('Номер телефона')
     print_str += '{:<20s}'.format('Описание')
     print_str += '\n-------------------------------------------------------------------------------------------------\n'
 
+    i = 1
     for line in phone_book:
+        print_str += '{:<10s}'.format(str(i))
         for row in line:
            print_str += '{:<20s}'.format(row)
         print_str += '\n'
+        i += 1
     print(print_str)
 
 def work_with_phonebook():
