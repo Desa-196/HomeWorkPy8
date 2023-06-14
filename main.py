@@ -16,6 +16,11 @@ def show_menu():
     print('\t 5. Сохранить изменения в файл')
     return int(input('Введите пункт меню: '))
 
+def get_search_name():
+    return input('Введите имя для поиска: ').strip()
+
+def find_by_name(phone_book, name):
+    return [x for x in phone_book if str.upper(x[1]) == str.upper(name)]
 
 def read_csv(filename):
     phonebook_list = []
@@ -41,10 +46,10 @@ def work_with_phonebook():
 
         if choice == select_menu.VIEW_PHONEBOOK:
             print_result(phone_book)
-        '''elif choice == select_menu.SEARCH_BY_NAME:
+        elif choice == select_menu.SEARCH_BY_NAME:
              name = get_search_name()
              print_result((find_by_name(phone_book, name)))
-'''
+
         # elif choice == select_menu.SEARCH_BY_NUMBER:
         #     number = get_search_number()
         #     print(find_by_number(phone_book, number))
