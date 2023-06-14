@@ -9,7 +9,15 @@ class select_menu(Enum):
 
 def show_menu():
     os.system('CLS')
+    print('Добро пожаловать в телефонный справочник.')
+    print('Для дальнейшей работы, выберете один из пунктов меню:')
+    print('\t 1. Отобразить все записи')
+    print('\t 2. Найти запись по имени')
+    print('\t 3. Найти запись по номеру телефона')
+    print('\t 4. Добавить новую запись')
     return input('Пункт меню: ')
+
+# def read_csv:
 
 def print_result(phone_book):
     print('Результат')
@@ -40,3 +48,5 @@ def work_with_phonebook():
         #     write_txt(file_name, phone_book)
 
         choice = show_nemu()
+
+work_with_phonebook()
