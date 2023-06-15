@@ -9,6 +9,7 @@ class select_menu(IntEnum):
     DELETE_USER = 6
     EDIT_USER = 7
 
+# Функция отображает меню, ожидает выбора одного из пунктов и возвращает номер выбранного пункта
 def show_menu():
     print('Добро пожаловать в телефонный справочник.')
     print('Для дальнейшей работы, выберете один из пунктов меню:')
@@ -21,6 +22,7 @@ def show_menu():
     print('\t 7. Изменить запись')
     return int(input('Введите пункт меню, для выхода из программы введите 8: '))
 
+# Функция запрашивает данные для создания новой записи и возвращает список из введенных данных
 def get_new_user():
     user_data = []
     user_data.append(get_string_from_console('Введите фамилию: '))
@@ -46,9 +48,11 @@ def get_edit_user(user_data):
 
     return user_data
 
+#Функция для запроса ввода текста
 def get_string_from_console(text):
     return input(text).strip()
 
+# Функция для ввода int значения с проверкой
 def read_int(text, max, min):
     while(True):
         try:
@@ -66,9 +70,11 @@ def read_int(text, max, min):
         else:
             print('Число должно быть, целым!')
 
+# Функция для поиска по одной из колонок, возвращает список найденных записей
 def find_string_in_column(phone_book, find_string, column):
-    return [x for x in phone_book if str.upper(x[column]) == str.upper(find_string)]
+    return [x for x in phone_book if str.upper(x[column]).startswith(str.upper(find_string))]
 
+# Функция чтения из файла csv, возвращает список считаных записей
 def read_csv(filename):
     phonebook_list = []
     with open(filename, "r", encoding="utf-8") as data:
@@ -80,16 +86,18 @@ def read_csv(filename):
             i += 1
     return phonebook_list
 
+# Функция добавления записи в конец файла
 def add_csv(filename, new_row_book):
     with open(filename, "a", encoding="utf-8") as data: 
         data.write(','.join(new_row_book) + '\n')
 
+# Функция для перезаписи файла csv
 def write_csv(filename, phone_book):
     with open(filename, "w", encoding="utf-8") as data: 
         for line in phone_book:
             data.write(','.join(line[1:]) + '\n')
     
-
+# Функция отображает в виде таблицы переданный в параметре список записей
 def print_result(phone_book):
 
     print_str = '\n'
@@ -106,7 +114,9 @@ def print_result(phone_book):
         print_str += '\n'
     print(print_str)
 
+# Основная функция обрабатывающая действия пользователя
 def work_with_phonebook():
+
     choice = show_menu()
     phone_book = read_csv('phonebook.csv')
 
@@ -115,15 +125,15 @@ def work_with_phonebook():
         if choice == select_menu.VIEW_PHONEBOOK:
             print_result(phone_book)
         elif choice == select_menu.SEARCH_BY_NAME:
-            name = get_string_from_console('Введите имя для поиска: ')
+            name = get_string_from_console('Введите первые символы имени для поиска: ')
             print_result(find_string_in_column(phone_book, name, 2))
         
         elif choice == select_menu.SEARCH_BY_SURNAME:
-            surname = get_string_from_console('Введите фамилию для поиска: ')
+            surname = get_string_from_console('Введите первые символы фамилии для поиска: ')
             print_result(find_string_in_column(phone_book, surname, 1))
 
         elif choice == select_menu.SEARCH_BY_NUMBER:
-            number = get_string_from_console('Введите номер телефона для поиска: ')
+            number = get_string_from_console('Введите первые символы номера телефона для поиска: ')
             print_result(find_string_in_column(phone_book, number, 3))
 
         elif choice == select_menu.ADD_NEW_USER:
@@ -133,7 +143,9 @@ def work_with_phonebook():
 
         elif choice == select_menu.DELETE_USER:
             index = read_int('Введите номер записи для удаления: ', len(phone_book), 1)
+            # Перезаписываем файл csv всеми элементами списка phone_book пропуская элемент который хотим удалить
             write_csv('phonebook.csv', [i for i in phone_book if i[0] != index])
+            #Обновляем phone_book из файла csv
             phone_book = read_csv('phonebook.csv')
 
         elif choice == select_menu.EDIT_USER:
