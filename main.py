@@ -6,6 +6,8 @@ class select_menu(IntEnum):
     SEARCH_BY_SURNAME = 3
     SEARCH_BY_NUMBER = 4
     ADD_NEW_USER = 5
+    DELETE_USER = 6
+    EDIT_USER = 7
 
 def show_menu():
     print('Добро пожаловать в телефонный справочник.')
@@ -15,10 +17,9 @@ def show_menu():
     print('\t 3. Найти запись по фамилии')
     print('\t 4. Найти запись по номеру телефона')
     print('\t 5. Добавить новую запись')
+    print('\t 6. Удалить запись')
+    print('\t 7. Изменить запись')
     return int(input('Введите пункт меню: '))
-
-def add_user(phone_book, user_data):
-    phone_book.append(user_data)
 
 def get_new_user():
     user_data = []
@@ -37,59 +38,69 @@ def find_string_in_column(phone_book, find_string, column):
 def read_csv(filename):
     phonebook_list = []
     with open(filename, "r", encoding="utf-8") as data:
+        i = 1
         for line in data:
-            phonebook_list.append(line.rstrip().split(','))
+            row = line.rstrip().split(',')
+            row.insert(0, str(i))
+            phonebook_list.append(row)
+            i += 1
     return phonebook_list
 
-def write_csv(filename, phone_book):
+def add_csv(filename, new_row_book):
     with open(filename, "a", encoding="utf-8") as data: 
-        print(phone_book)
-        data.write(','.join(phone_book) + '\n')
+        data.write(','.join(new_row_book) + '\n')
+
+def write_csv(filename, phone_book):
+    with open(filename, "w", encoding="utf-8") as data: 
+        for line in phone_book:
+            data.write(','.join(line[1:]) + '\n')
+    
 
 def print_result(phone_book):
 
     print_str = '\n'
-    print_str += '{:<10s}'.format('№')
+    print_str += '{:<20s}'.format('№ записи')
     print_str += '{:<20s}'.format('Фамилия')
     print_str += '{:<20s}'.format('Имя')
     print_str += '{:<20s}'.format('Номер телефона')
     print_str += '{:<20s}'.format('Описание')
     print_str += '\n-------------------------------------------------------------------------------------------------\n'
 
-    i = 1
     for line in phone_book:
-        print_str += '{:<10s}'.format(str(i))
         for row in line:
            print_str += '{:<20s}'.format(row)
         print_str += '\n'
-        i += 1
     print(print_str)
 
 def work_with_phonebook():
     choice = show_menu()
     phone_book = read_csv('phonebook.csv')
 
-    while(choice != 6):
+    while(choice != 8):
 
         if choice == select_menu.VIEW_PHONEBOOK:
             print_result(phone_book)
         elif choice == select_menu.SEARCH_BY_NAME:
             name = get_string_from_console('Введите имя для поиска: ')
-            print_result(find_string_in_column(phone_book, name, 1))
+            print_result(find_string_in_column(phone_book, name, 2))
         
         elif choice == select_menu.SEARCH_BY_SURNAME:
             surname = get_string_from_console('Введите фамилию для поиска: ')
-            print_result(find_string_in_column(phone_book, surname, 0))
+            print_result(find_string_in_column(phone_book, surname, 1))
 
         elif choice == select_menu.SEARCH_BY_NUMBER:
             number = get_string_from_console('Введите номер телефона для поиска: ')
-            print_result(find_string_in_column(phone_book, number, 2))
+            print_result(find_string_in_column(phone_book, number, 3))
 
         elif choice == select_menu.ADD_NEW_USER:
             user_data = get_new_user()
-            add_user(phone_book, user_data)
-            write_csv('phonebook.csv', user_data)
+            add_csv('phonebook.csv', user_data)
+            phone_book = read_csv('phonebook.csv')
 
+        elif choice == select_menu.DELETE_USER:
+            index = get_string_from_console('Введите номер записи для удаления: ')
+            write_csv('phonebook.csv', [i for i in phone_book if i[0] != index])
+            phone_book = read_csv('phonebook.csv')
         choice = show_menu()
 
 work_with_phonebook()
